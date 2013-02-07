@@ -32,8 +32,8 @@ $(document).ready(function () {
   * create client and set up vars
   ********************************************************************/
   var client = new Usergrid.Client({
-    orgName:'ApigeeOrg', //your orgname goes here (not case sensitive)
-    appName:'MessageeApp', //your appname goes here (not case sensitive)
+    orgName:'frankcarey', //your orgname goes here (not case sensitive)
+    appName:'sandbox1', //your appname goes here (not case sensitive)
     logging: true, //optional - turn on logging, off by default
     buildCurl: true //optional - turn on curl commands, off by default
   });
