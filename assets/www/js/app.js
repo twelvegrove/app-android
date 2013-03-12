@@ -51,6 +51,7 @@ $(document).ready(function () {
   /*******************************************************************
   * bind the various click events
   ********************************************************************/
+  $('#btn-show-classes').bind('click', showClasses);
   $('#btn-login').bind('click', login);
   $('#btn-show-page-update-account').bind('click', pageUpdateAccount);
   $('#btn-logout').bind('click', logout);
@@ -144,6 +145,30 @@ $(document).ready(function () {
    *  @method login
    *  @return none
    */
+
+  function apiRequest(requestType, path){
+    $.ajax({
+      url: "https://api.usergrid.com/" + path,
+      type: requestType,
+      dataType: 'json',
+      success: function() { alert('hello!'); },
+      error: function() { alert('boo!'); },
+      beforeSend: setHeader
+    });
+  };
+
+  function setHeader(xhr) {
+            console.log('in setHeader');
+            xhr.setRequestHeader('Authorization', 'Bearer YWMtGRWwqYq9EeK_JQLoGtzz0AAAAT2AfbVEsW7UAfyxeJ3QrXAGAq-ABfjmgRk');
+        }
+
+  function showClasses(){
+      console.log('show classes has been called');
+      //Usergrid.Client.prototype.setToken('Bearer YWMtGRWwqYq9EeK_JQLoGtzz0AAAAT2AfbVEsW7UAfyxeJ3QrXAGAqABfjmgRk');
+      //Usergrid.Entity.prototype.get()
+      apiRequest("GET", "frankcarey/sandbox1/classes?ql=select * where subject = 'Biology'");
+  }
+
   function login() {
     $('#login-section-error').html('');
     var username = $("#username").val();
