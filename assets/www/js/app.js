@@ -46,12 +46,10 @@ $(document).ready(function () {
   var classFeed;
   var defaultSubject = '*';
   var currentSubject;
-  
 
   /*******************************************************************
   * bind the various click events
   ********************************************************************/
-  $('#btn-show-classes').bind('click', showClasses);
   $('#btn-login').bind('click', login);
   $('#btn-show-page-update-account').bind('click', pageUpdateAccount);
   $('#btn-logout').bind('click', logout);
@@ -60,14 +58,15 @@ $(document).ready(function () {
   $('#btn-show-schedule').bind('click', showMyClasses);
   $('#btn-show-classes').bind('click', showFullClasses);
   $('#btn-show-classes').bind('click', function(){
-  currentSubject = document.getElementById('subj').value;
+	currentSubject = document.getElementById('subj').value;
 	});
   $('#btn-show-create-message').bind('click', function() {
     $("#content").val('');
     $("#content").focus();
   });
   $('#post-message').bind('click', postMessage);
-  $('#btn-search').bind('click', showFullClasses);
+  $('#btn-search').bind('click', showFullClasses);  
+
   //bind the next and previous buttons
   $('#btn-previous').bind('click', function() {
     if (classView) {
@@ -145,30 +144,6 @@ $(document).ready(function () {
    *  @method login
    *  @return none
    */
-
-  function apiRequest(requestType, path){
-    $.ajax({
-      url: "https://api.usergrid.com/" + path,
-      type: requestType,
-      dataType: 'json',
-      success: function() { alert('hello!'); },
-      error: function() { alert('boo!'); },
-      beforeSend: setHeader
-    });
-  };
-
-  function setHeader(xhr) {
-            console.log('in setHeader');
-            xhr.setRequestHeader('Authorization', 'Bearer YWMtGRWwqYq9EeK_JQLoGtzz0AAAAT2AfbVEsW7UAfyxeJ3QrXAGAq-ABfjmgRk');
-        }
-
-  function showClasses(){
-      console.log('show classes has been called');
-      //Usergrid.Client.prototype.setToken('Bearer YWMtGRWwqYq9EeK_JQLoGtzz0AAAAT2AfbVEsW7UAfyxeJ3QrXAGAqABfjmgRk');
-      //Usergrid.Entity.prototype.get()
-      apiRequest("GET", "frankcarey/sandbox1/classes?ql=select * where subject = 'Biology'");
-  }
-
   function login() {
     $('#login-section-error').html('');
     var username = $("#username").val();
@@ -427,7 +402,7 @@ $(document).ready(function () {
     } else {
       //no feed obj yet, so make a new one
       var options = {
-        type:'users/me/enrolling/',
+        type:'users/me/enrolling/classes/',
         qs:{"ql":"order by created desc"}
       }
       client.createCollection(options, function(err, collectionObj){
@@ -453,28 +428,24 @@ $(document).ready(function () {
     var classesToBind = [];
     feed.resetEntityPointer();
     while(feed.hasNextEntity()) {
-      var message = feed.getNextEntity(),	  
+      var message = feed.getNextEntity(), 
 	  uuid = message.get('uuid'),
 	  attrib = message.get('attributes'),
 	  course = message.get('course'),
 	  credits = 'Credits: ' + message.get('credits'),
 	  crn = 'CRN: ' + message.get('crn'),
 	  link = message.get('link'),
-	  location = 'Location: ' + message._data.sessions[0].location,
-	  instructor = 'Instructor: ' + message._data.sessions[0].instructor,
-	  days = 'Days: ' + message._data.sessions[0].days,
-	  time = ' Time: ' + message._data.sessions[0].time,
-	  //location2 = 'Location2: ' + message.get('sessions.location'),
-	  //instructor2 =  'Instructor2: ' + message.get('instructor'),
-	  //days2 = 'Days2: ' + message.get('sessions.days'),
-	  //time2 = ' Time2: ' + message.get('sessions.time')
+	  location = 'Location: ' + message.get('sessions.location'),
+	  instructor = 'Instructor: ' + message.get('instructor'),
+	  days = 'Days: ' + message.get('sessions.days'),
+	  time = ' Time: ' + message.get('sessions.time')
+	  location2 = 'Location2: ' + message.get('sessions.location'),
+	  instructor2 =  'Instructor2: ' + message.get('instructor'),
+	  days2 = 'Days2: ' + message.get('sessions.days'),
+	  time2 = ' Time2: ' + message.get('sessions.time')
 	  title = message.get('title'),
       created = message.get('created'),//<----created stored the 'created' attribute of a message, which a class doesn't have, so i used uuid since its' unique
 	  imageUrl = 'http://www.newpaltz.edu/images/spacer.gif';  //---you'll see below why it's important.
-	  console.log(message);
-	  Usergrid.Client.currentClass = message;
-	  
-	  
 	  
 	  
 	  
@@ -516,8 +487,7 @@ $(document).ready(function () {
 	  html+='</div>';	 
 	  
 	  html +='<div style="width: 400px; float: left;>';
-      html += '<span style="float: left;padding-right: 10px"><a href="#page-show-link" id="link-' + created +'"><strong>' + title + '</strong></a></span>';
-	  html+='<script>$("#link-'+created+'").bind("click", function(){document.getElementById("class-link").src="'+link+'";})</script>'; 
+      html += '<span style="float: left;padding-right: 10px"><a href=' + link + '><strong>' + title + '</strong></a></span>';	  	  
 	  html+='</div>';	
 	  html +='<div style="width: 150px; float: left;>';
       html += '<span style="float: left;padding-right: 10px"><strong>' + days + '</strong></span>';	  	  
@@ -545,8 +515,6 @@ $(document).ready(function () {
 	
 	  
 	  html+='</div>';
-	  
-	  
       
       	  
       
@@ -557,10 +525,9 @@ $(document).ready(function () {
     if (html == "") { html = "No classes yet!"; }
     $("#messages-list").html(html);					
    for(uuid in classesToBind) { 				//----and here the array is used to bind a click event on the follow button for every user
-      $('#'+uuid).bind('click', function(event) {  
-								//however i commented it out since we do not have that function for adding a class to a user yet but 
-			uuid = event.target.name;					//something like this array would be used to bind a button to each class.
-			addClass(uuid);			
+      $('#'+uuid).bind('click', function(event) {   //however i commented it out since we do not have that function for adding a class to a user yet but 
+        				//something like this array would be used to bind a button to each class.
+        addClass(uuid);
       });
     }
 	
@@ -580,10 +547,6 @@ $(document).ready(function () {
     $(this).scrollTop(0);
   }
    
-   
-   function enrollHandle(event){
-   console.log(event);
-   }
 
  
 
