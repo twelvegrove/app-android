@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title></title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" type="text/css"
-	href="css/jquery.mobile-1.2.0.css" />
-<title>Hello World</title>
-</head>
-<body>
-	<div class="app">
-		<div data-role="page" data-theme="b" id="page-login">
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
+    <style type="text/css">.error{ background-color: #ffaaaa; } </style>
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+    <script src="js/usergrid.js" type="text/javascript"></script>
+    <script src="js/extensions/usergrid.validation.js" type="text/javascript"></script>
+    <script src="js/app.js" type="text/javascript"></script>
+  </head>
+  <body>
+
+        <div data-role="page" data-theme="b" id="page-login">
           <div data-role="header" data-theme="b">
             <h1>Messagee</h1>
           </div>
@@ -87,34 +91,27 @@
               <button id="btn-update-account">Update</button>
             </div>
             <div style="width: 50%; float: right">
-              <a href="#page-messages-list" id="btn-close" data-role="button">Close</a>
+              <a href="#page-classes-list" id="btn-close" data-role="button">Close</a>
             </div>
           </div>
         </div>
 
 
-        <div data-role="page" data-theme="b" id="page-messages-list">
+        <div data-role="page" data-theme="b" id="page-classes-list">
           <div data-role="header" data-theme="b">
-            <h1>Message</h1>
+            <h1>Messagee</h1>
             <a href="#login" id="btn-logout" data-role="button">Logout</a>
             <a href="#page-update-account" id="btn-show-page-update-account" data-role="button" data-icon="gear" data-rel="dialog" data-transition="fade">Settings</a>
           </div>
-          
-      <!-- Show Classes button -->
-
-          <a href="#page-show-classes" id="btn-show-classes" data-role="button" data-rel="dialog" data-transition="fade">Show Classes</a>
-
-      <!--end button -->
-
-          <a href="#page-new-message" id="btn-show-create-message" data-role="button" data-rel="dialog" data-transition="fade">Compose Message</a>
+          <a href="#page-search-classes" id="btn-show-search-classes" data-role="button" data-rel="dialog" data-transition="fade">Search Classes</a>
           <div style="width: 50%; float: left">
-              <a href="#" data-role="button" data-icon="home" id="btn-show-my-feed">My Stream</a>
+              <a href="#" data-role="button" data-icon="home" id="btn-show-schedule">My Schedule</a>
           </div>
           <div style="width: 50%; float: right">
-            <a href="#" data-role="button" data-icon="grid" id="btn-show-full-feed" class="ui-btn-up-c">All Posts</a>
+            <a href="#" data-role="button" data-icon="grid" id="btn-show-classes" class="ui-btn-up-c">Find Classes</a>
           </div>
           <div id="messages-list"  data-role="content">
-              No messages yet!
+              No classes yet!
           </div>
           <div id="feed-btn-container"  data-role="content">
             <div style="width: 50%; float: left" id="previous-btn-container">
@@ -129,72 +126,109 @@
           </div>
         </div>
 
-    <!-- Show classes page -->
 
-        <div data-role="page" data-theme="b" id="page-show-classes">
+        <div data-role="page" data-theme="b" id="page-search-classes">
           <div data-role="header" data-theme="b">
-            <h1>Schedule of Classes</h1>
+            <h1>Search Classes</h1>
           </div>
           <div data-role="content">
-            <h1>CLASSES!!!!!</h1>
-            <body></body>
-            <!--<form name="login" id="login-form">
-              <label for="content">Message (150 Chars max)</label>
-              <textarea id="content" class="input-xlarge" rows="3" style="margin: 0px; width: 100%; height: 125px; "></textarea>
-            </form>
-            <div style="width: 50%; float: left">
-              <button id="post-message">Post</button>
-            </div>
-            <div style="width: 50%; float: right">
-              <a href="#page-messages-list" id="btn-close-new-message" data-role="button">Cancel</a>
-            </div> -->
-          </div>
+           <form class="form" id="search-form" method="post" name="search"><!--action="javascript:showFullClasses(document.getElementById('subj').value)",-->
+		   <div class="field-block">
+          <label class="bold" for="subj">Subject</label>
+          <select class="field" id="subj" name="subj">
+            <option value="*">All</option>
+    
+			<option value="Ancient World Studies">Ancient World Studies</option>
+			<option value="Anthropology">Anthropology</option>
+			<option value="Arabic">Arabic</option>
+			<option value="Art Education">Art Education</option>
+			<option value="Art History">Art History</option>
+			<option value="Art Studio">Art Studio</option>
+			<option value="Asian Studies">Asian Studies</option>
+			<option value="Biochemistry">Biochemistry</option>
+			<option value="Biology">Biology</option>
+			<option value="Black Studies">Black Studies</option>
+			<option value="Business Administration">Business Administration</option>
+			<option value="Chemistry">Chemistry</option>
+			<option value="Chinese">Chinese</option>
+			<option value="Communication Disorders">Communication Disorders</option>
+			<option value="Communication and Media">Communication and Media</option>
+			<option value="Computer Science">Computer Science</option>
+			<option value="Counseling">Counseling</option>
+			<option value="Deaf Studies">Deaf Studies</option>
+			<option value="Deaf Studies">Economics</option>
+			<option value="Education Interdisciplinary">Education Interdisciplinary</option>
+			<option value="Educational Administration">Educational Administration</option>
+			<option value="Educational Studies">Educational Studies</option>
+			<option value="Elementary Education">Elementary Education</option>
+			<option value="Engineering-Computer">Engineering-Computer</option>
+			<option value="Engineering-Electrical">Engineering-Electrical</option>
+			<option value="Engineering-General">Engineering-General</option>
+			<option value="English">English</option>
+			<option value="English as a Second Language">English as a Second Language</option>
+			<option value="Environmental Geochemical Sci">Environmental Geochemical Sci</option>
+			<option value="Environmental Science">Environmental Science</option>
+			<option value="Environmental Studies">Environmental Studies</option>
+			<option value="Evolutionary Studies">Evolutionary Studies</option>
+			<option value="Film and Video Studies">Film and Video Studies</option>
+			<option value="French">French</option>
+			<option value="Geography">Geography</option>
+			<option value="Geology">Geology</option>
+			<option value="German">German</option>
+			<option value="History">History</option>
+			<option value="Honors">Honors</option>
+			<option value="International Relations">International Relations</option>
+			<option value="Italian">Italian</option>
+			<option value="Italian Studies">Italian Studies</option>
+			<option value="Japanese">Japanese</option>
+			<option value="Jewish Studies">Jewish Studies</option>
+			<option value="Journalism">Journalism</option>
+			<option value="Kiswahili">Kiswahili</option>
+			<option value="Latin Amer & Caribbean Studies">Latin Amer & Caribbean Studies</option>
+			<option value="Law and Related Legal Studies">Law and Related Legal Studies</option>
+			<option value="Linguistics">Linguistics</option>
+			<option value="Mathematics">Mathematics</option>
+			<option value="Medieval/Early Modern Studies">Medieval/Early Modern Studies</option>
+			<option value="Music">Music</option>
+			<option value="Native American Studies">Native American Studies</option>
+			<option value="Philosophy">Philosophy</option>
+			<option value="Physics">Physics</option>
+			<option value="Political Science">Political Science</option>
+			<option value="Psychology">Psychology</option>
+			<option value="Religious Studies">Religious Studies</option>
+			<option value="Russian">Russian</option>
+			<option value="Secondary Education">Secondary Education</option>
+			<option value="Sociology">Sociology</option>
+			<option value="Spanish">Spanish</option>
+			<option value="Special Education">Special Education</option>
+			<option value="Study Abroad">Study Abroad</option>
+			<option value="Theater Arts">Theater Arts</option>
+			<option value="Women's,Gender, & Sexuality St">Women's,Gender, & Sexuality St</option>
+
+          </select>
         </div>
 
-
-    <!-- End show classes page -->
-
-
-        <div data-role="page" data-theme="b" id="page-new-message">
-          <div data-role="header" data-theme="b">
-            <h1>Create a new message</h1>
-          </div>
-          <div data-role="content">
-            <form name="login" id="login-form">
-              <label for="content">Message (150 Chars max)</label>
-              <textarea id="content" class="input-xlarge" rows="3" style="margin: 0px; width: 100%; height: 125px; "></textarea>
-            </form>
-            <div style="width: 50%; float: left">
-              <button id="post-message">Post</button>
-            </div>
-            <div style="width: 50%; float: right">
-              <a href="#page-messages-list" id="btn-close-new-message" data-role="button">Cancel</a>
-            </div>
+        <div class="field-block" style="width: 50%; float: left">
+          <!--<input type="submit" value="Search">-->
+		  <button id="btn-search" data-role="button">Search</button>
+        </div>
+        <div style="width: 50%; float: right">
+              <a href="#page-classes-list" id="btn-close-new-message" data-role="button">Cancel</a>
+        </div>
           </div>
         </div>
 
 
         <div data-role="page" data-theme="b" id="page-now-following">
           <div data-role="header" data-theme="b">
-            <h1>Congratulations!</h1>
+            <h1>Alert</h1>
           </div>
           <div data-role="content">
             <div id="now-following-text" style="height: 75px;"></div>
             <a href="#" data-rel="back" data-role="button" data-icon="delete">OK</a>
           </div>
         </div>
-	</div>
-	<script type="text/javascript" src="cordova-2.3.0.js"></script>
-	<script type="text/javascript" src="js/jquery-1.8.2.js"></script>
-	<script type="text/javascript" src="js/jquery.mobile-1.2.0.js"></script>
-    <script type="text/javascript" src="js/jquery.mobile-1.2.0.js"></script>
-	<script type="text/javascript" src="js/usergrid.js"></script><script type="text/javascript" src="js/jquery.mobile-1.2.0.js"></script>
-	<script type="text/javascript" src="js/extensions/usergrid.validation.js"></script><script type="text/javascript" src="js/jquery.mobile-1.2.0.js"></script>
-	<script type="text/javascript" src="js/app.js"></script>
 
 
-	<script type="text/javascript" src="js/index.js"></script>
-            app.initialize();
-        </script>
-</body>
+    </body>
 </html>
