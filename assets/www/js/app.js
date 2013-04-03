@@ -26,22 +26,27 @@
  *
  *  This file contains the main program logic for Messagee.
  */
+ 
 $(document).ready(function () {
 
   /*******************************************************************
   * create client and set up vars
   ********************************************************************/
   var client = new Usergrid.Client({
-    orgName:'ApigeeOrg', //your orgname goes here (not case sensitive)
-    appName:'MessageeApp', //your appname goes here (not case sensitive)
+    orgName:'frankcarey', //your orgname goes here (not case sensitive) <------------------I changed the default to our org and appname which initally I 
+    appName:'sandbox1', //your appname goes here (not case sensitive)  --------hadn't I think it helped with my login problems.
     logging: true, //optional - turn on logging, off by default
     buildCurl: true //optional - turn on curl commands, off by default
   });
 
   var appUser;
-  var fullFeedView = true;
-  var fullActivityFeed;
+  var classView = true;
+  //var fullActivityFeed;
   var userFeed;
+  var classFeed;
+  var defaultSubject = '*';
+  var currentSubject;
+  
 
   /*******************************************************************
   * bind the various click events
@@ -50,23 +55,26 @@ $(document).ready(function () {
   $('#btn-show-page-update-account').bind('click', pageUpdateAccount);
   $('#btn-logout').bind('click', logout);
   $('#btn-create-new-account').bind('click', createNewUser);
-  $('#btn-update-account').bind('click', updateUser);
-  $('#btn-show-my-feed').bind('click', showMyFeed);
-  $('#btn-show-full-feed').bind('click', showFullFeed);
-  $('#btn-show-create-message').bind('click', function() {;
+  $('#btn-update-account').bind('click', updateUser);  
+  $('#btn-show-schedule').bind('click', showMyClasses);
+  $('#btn-show-classes').bind('click', showFullClasses);
+  $('#btn-show-classes').bind('click', function(){
+  currentSubject = document.getElementById('subj').value;
+	});
+  $('#btn-show-create-message').bind('click', function() {
     $("#content").val('');
     $("#content").focus();
   });
   $('#post-message').bind('click', postMessage);
-
+  $('#btn-search').bind('click', showFullClasses);
   //bind the next and previous buttons
   $('#btn-previous').bind('click', function() {
-    if (fullFeedView) {
-      fullActivityFeed.getPreviousPage(function (err) {
+    if (classView) {
+      classFeed.getPreviousPage(function (err) {
         if (err) {
           alert('Could not get feed. Please try again.');
         } else {
-          drawMessages(fullActivityFeed);
+          drawClasses(classFeed);
         }
       });
     } else {
@@ -74,19 +82,19 @@ $(document).ready(function () {
         if (err) {
           alert('Could not get feed. Please try again.');
         } else {
-          drawMessages(userFeed);
+          drawClasses(classFeed);
         }
       });
     }
   });
 
   $('#btn-next').bind('click', function() {
-    if (fullFeedView) {
-      fullActivityFeed.getNextPage(function (err) {
+    if (classView) {
+      classFeed.getNextPage(function (err) {
         if (err) {
           alert('Could not get feed. Please try again.');
         } else {
-          drawMessages(fullActivityFeed);
+          drawClasses(classFeed);
         }
       });
     } else {
@@ -94,7 +102,7 @@ $(document).ready(function () {
         if (err) {
           alert('Could not get feed. Please try again.');
         } else {
-          drawMessages(userFeed);
+          drawClasses(classFeed);
         }
       });
     }
@@ -115,7 +123,7 @@ $(document).ready(function () {
     } else {
       if (client.isLoggedIn()){
         appUser = user;
-        showFullFeed();
+        showMyClasses(defaultSubject); //<--------------------------------------------------------------showFullClasses()
       }
     }
   });
@@ -154,6 +162,7 @@ $(document).ready(function () {
               if (client.isLoggedIn()){
                 appUser = user;
                // showFullFeed();
+			   showMyClasses();//<--------------------------------------------------------------showFullClasses()
               }
             }
           });
@@ -163,7 +172,7 @@ $(document).ready(function () {
           $("#password").val('');
 
           //default to the full feed view (all messages in the system)
-          showMyFeed();
+          showMyClasses();//<--------------------------------------------------------------showFullClasses()
         }
       }
     );
@@ -309,59 +318,91 @@ $(document).ready(function () {
           $("#update-newpassword").addClass('error');})  ) {
 
       appUser.set({"name":name,"username":username,"email":email,"oldpassword":oldpassword, "newpassword":newpassword});
-      appUser.save(
-        function () {
-          $('#user-message-update-account').html('<strong>Your account was updated</strong>');
-        },
-        function () {
+      appUser.save(function (err) {
+        if (err) {
           window.location = "#login";
-           $('#user-message-update-account').html('<strong>There was an error updating your account</strong>');
+          $('#user-message-update-account').html('<strong>There was an error updating your account</strong>');
+        } else {
+          $('#user-message-update-account').html('<strong>Your account was updated</strong>');
         }
-      );
+      });
     }
   }
 
-  /**
-   *  Function to get the user's feed from the API
-   *
-   *  First make sure the user is logged in, then we make sure we are on
-   *  the messages list page.
-   *
-   *  Next, we reset the paging of the feed object, so that user will
-   *  see the first page of the feed
-   *
-   *  Next, we check to see if the feed object exists.  If so, we we do a
-   *  get on the feed object, which makes a call to the
-   *  API to retrieve the messages in the feed
-   *
-   *  On success, the drawMessages method is invoked
-   *
-   *  @method showMyFeed
-   *  @return none
-   */
-  function showMyFeed() {
+   
+  
+  /**Function to get classes from the API
+  
+  **/
+  function showFullClasses(subject) {	//<-------------showFullClasses() Function(copied from showFullFeed), this function makes the query, stores the result
+								//--and passed it to another method, drawClasses.
+    if (!isLoggedIn()) return;
+	
+	var subj = document.getElementById('subj').value ;
+
+    //make sure we are on the classes page
+    window.location = "#page-classes-list";
+
+    classView = true;
+    $('#btn-show-classes').addClass('ui-btn-up-c');
+    $('#btn-show-schedule').removeClass('ui-btn-up-c');
+
+
+			//v--This would check if a feed already exists(a collection object) and use that instead of creating a new one, i commented it
+				//---to see if that's why the &limit wasn't working and b/c I'm not sure if we want that.
+	/**if  (classFeed) {	
+                            
+      classFeed.resetPaging();
+      classFeed.fetch(function (err) {
+        if (err) {
+          alert('Could not get activity feed. Please try again.');
+        } else {
+          drawClasses(classFeed)
+        }
+      });
+    } else {
+	
+**/		
+      var options = {	//<--Here a collection Object is created, the function createCollection is from usergrid.js, is basically makes a query and 
+						//--stores what's returned in collectionObj, which is stored in classFeed, defined as a global variable up top, which is 
+						//--passed to drawclasses(copied from drawmessages)
+		type:'classes',
+        qs:{"ql": "select * where subject = '" + subj + "'"}
+      }
+      //no feed obj yet, so make a new one
+      client.createCollection(options, function(err, collectionObj){
+        if (err) {
+          alert('Could not get activity feed. Please try again.');
+        } else {
+          classFeed = collectionObj;
+          drawClasses(classFeed);
+        }
+      });
+    }
+	
+	function showMyClasses() {
     if (!isLoggedIn()) return;
 
     //make sure we are on the messages page
-    window.location = "#page-messages-list";
+    window.location = "#page-classes-list";
 
-    fullFeedView = false;
-    $('#btn-show-full-feed').removeClass('ui-btn-up-c');
-    $('#btn-show-my-feed').addClass('ui-btn-up-c');
-
+    classView = false;
+    $('#btn-show-classes').removeClass('ui-btn-up-c');
+    $('#btn-show-schedule').addClass('ui-btn-up-c');
+	
     if  (userFeed) {
       userFeed.resetPaging();
       userFeed.fetch(function (err) {
         if (err) {
           alert('Could not get user feed. Please try again.');
         } else {
-          drawMessages(userFeed);
+          drawClasses(userFeed);
         }
       });
     } else {
       //no feed obj yet, so make a new one
       var options = {
-        type:'user/me/feed',
+        type:'users/me/enrolling/',
         qs:{"ql":"order by created desc"}
       }
       client.createCollection(options, function(err, collectionObj){
@@ -369,96 +410,51 @@ $(document).ready(function () {
          alert('Could not get user feed. Please try again.');
         } else {
           userFeed = collectionObj;
-          drawMessages(userFeed);
+          drawClasses(userFeed);
         }
       });
     }
   }
-
-  /**
-   *  Function to get the user's feed from the API
-   *
-   *  First make sure the user is logged in, then we make sure we are on
-   *  the messages list page.
-   *
-   *  Next, we reset the paging of the feed object, so that user will
-   *  see the first page of the feed
-   *
-   *  Next, we check to see if the feed object exists.  If so, we we do a
-   *  get on the feed object, which makes a call to the
-   *  API to retrieve the messages in the feed
-   *
-   *  On success, the drawMessages method is invoked
-   *
-   *  @method showFullFeed
-   *  @return none
-   */
-  function showFullFeed() {
-    if (!isLoggedIn()) return;
-
-    //make sure we are on the messages page
-    window.location = "#page-messages-list";
-
-    fullFeedView = true;
-    $('#btn-show-full-feed').addClass('ui-btn-up-c');
-    $('#btn-show-my-feed').removeClass('ui-btn-up-c');
-
-
-    if  (fullActivityFeed) {
-      fullActivityFeed.resetPaging();
-      fullActivityFeed.fetch(function (err) {
-        if (err) {
-          alert('Could not get activity feed. Please try again.');
-        } else {
-          drawMessages(fullActivityFeed);
-        }
-      });
-    } else {
-      var options = {
-        type:'activities',
-        qs:{"ql":"order by created desc"}
-      }
-      //no feed obj yet, so make a new one
-      client.createCollection(options, function(err, collectionObj){
-        if (err) {
-          alert('Could not get activity feed. Please try again.');
-        } else {
-          fullActivityFeed = collectionObj;
-          drawMessages(fullActivityFeed);
-        }
-      });
-    }
-  }
-
-  /**
-   *  Function to parse the messages of the feed
-   *
-   *  First, we create an array that will hold a the username of each person
-   *  who posted a message.  We will use this to bind click events for the
-   *  "follow" feature on the page.  We will set up the click events at the end of the page refresh
-   *
-   *  At the end of the method, we show the next and previous buttons if applicable
-   *
-   *  @method drawMessages
-   *  @param {object} feed -a Collection object
-   *  @return none
-   *
-   */
-  function drawMessages(feed) {
+	
+	
+  
+  /**Function to parse the classes of the feed
+  
+  **/
+   function drawClasses(feed) {  //<-------drawClasses() function, copied from drawMessages, takes the collection object, classFeed, and handles getting 
+								 //----getting the information, as seen in the .get('title') and so on below, which act on message which stores the NextEntity
+								 //---if one exists.
     var html = "";
-    var usersToBind = [];
+    var classesToBind = [];
     feed.resetEntityPointer();
     while(feed.hasNextEntity()) {
-      var message = feed.getNextEntity(),
-      created = message.get('created'),
-      content = message.get('content'),
-      email = '',
-      imageUrl = '',
-      actor = message.get('actor'),
-      name = actor.displayName || 'Anonymous',
-      username = actor.displayName;
-
-      if ('email' in actor) {
+      var message = feed.getNextEntity(),	  
+	  uuid = message.get('uuid'),
+	  attrib = message.get('attributes'),
+	  course = message.get('course'),
+	  credits = 'Credits: ' + message.get('credits'),
+	  crn = 'CRN: ' + message.get('crn'),
+	  link = message.get('link'),
+	  location = 'Location: ' + message._data.sessions[0].location,
+	  instructor = 'Instructor: ' + message._data.sessions[0].instructor,
+	  days = 'Days: ' + message._data.sessions[0].days,
+	  time = ' Time: ' + message._data.sessions[0].time,
+	  //location2 = 'Location2: ' + message.get('sessions.location'),
+	  //instructor2 =  'Instructor2: ' + message.get('instructor'),
+	  //days2 = 'Days2: ' + message.get('sessions.days'),
+	  //time2 = ' Time2: ' + message.get('sessions.time')
+	  title = message.get('title'),
+      created = message.get('created'),//<----created stored the 'created' attribute of a message, which a class doesn't have, so i used uuid since its' unique
+	  imageUrl = 'http://www.newpaltz.edu/images/spacer.gif';  //---you'll see below why it's important.
+	  console.log(message);
+	  Usergrid.Client.currentClass = message;
+	  
+	  
+	  
+	  
+	  
+						//v----------------------------This deals with emails and avatars for users so i commented it out
+      /**if ('email' in actor) {  
         email = actor.email;
         imageUrl = 'http://www.gravatar.com/avatar/' + MD5(email.toLowerCase()) + '?s=' + 50;
       }
@@ -470,28 +466,80 @@ $(document).ready(function () {
       if (!imageUrl) {
         imageUrl = 'http://www.gravatar.com/avatar/' + MD5('rod@apigee.com') + '?s=' + 50;
       }
-
-      formattedTime = prettyDate(created);
-
-      html += '<div style="border-bottom: 1px solid #444; padding: 5px; min-height: 60px;"><img src="' + imageUrl + '" style="border none; height: 50px; width: 50px; float: left;padding-right: 10px"> ';
-      html += '<span style="float: right">'+formattedTime+'</span>';
-      html += '<strong>' + name + '</strong>';
-      if (username && username != appUser.get('username')) {
-        html += '(<a href="#page-now-following" id="'+created+'" name="'+username+'" data-role="button" data-rel="dialog" data-transition="fade">Follow</a>)';
-      }
-      html += '<br><span>' + content + '</span> <br>';
+	  
+	**/
+      formattedTime = 'time'; //<----------this would get the time from created and put it through the prettyDate() function but classes don't have a created
+								//--so I just hardcoded the word 'time'. NOTE: this is not why created is important, still below.
+	  
+	  
+		//v----This is where the html to be displayed is built and the variables stored above are used, I didn't change the format at all so it doesn't look
+		//--good or display all the info i just wanted to see it worked, and the formatting can be changed to whatever we'd like.
+      
+	  
+	  
+	  html += '<div style="padding-left:5px; padding-right:5px; padding-top:5px; min-height: 25px;"><img src="' + imageUrl + '" style="border none; height: 50px; width: 50px; float: left;padding-right: 10px"> ';
+	  
+	  html +='<div style="width: 150px; float: right;>';
+      html += '<span style="float: right; padding-left: 10px">';
+	  //if (username && username != appUser.get('username')) {
+      html += '<a href="#page-now-following" id="'+created+'" name="'+uuid+'" data-role="button" data-rel="dialog" data-transition="fade">Add class</a>';
+	  //}
+	  html+='</span>';
+	  html+='</div>';
+	  html +='<div style="width: 150px; float: right;>';
+      html += '<span style="float: right"><strong>'+crn+'</strong></span>';
+	  html+='</div>';	 
+	  
+	  html +='<div style="width: 400px; float: left;>';
+      html += '<span style="float: left;padding-right: 10px"><a href="#page-show-link" id="link-' + created +'"><strong>' + title + '</strong></a></span>';
+	  html+='<script>$("#link-'+created+'").bind("click", function(){document.getElementById("class-link").src="'+link+'";})</script>'; 
+	  html+='</div>';	
+	  html +='<div style="width: 150px; float: left;>';
+      html += '<span style="float: left;padding-right: 10px"><strong>' + days + '</strong></span>';	  	  
+	  html+='</div>';	
+	  html +='<div style="width: 150px; float: left;>';
+      html += '<span style="float: left;padding-right: 10px"><strong>' + time + '</strong></span>';	 ;	  
+	  html+='</div>';	
+	  html +='<div style="width: 200px; float: left;>';
+      html += '<span style="float: left;padding-right: 10px"><strong>' + location + '</strong></span>';	 ;	  
+	  html+='</div>';
+	  html += '</div>';
+	  
+	  html += '<div style="border-bottom: 2px solid #444;padding:5px; padding-bottom:10px; min-height: 25px;">';
+	  
+	  html +='<div style="width: 150px; float: right;>';
+      html += '<span style="float: right>' + credits + '</span>';	  	  
+	  html+='</div>';
+	  
+	  html +='<div style="width: 400px; float: left;>';
+      html += '<span style="float: left;padding-right: 10px">'+course+'</span>';	  	  
+	  html+='</div>'
+	  html +='<div style="width: 350px; float: left;>';
+      html += '<span style="float: left;padding-right: 10px">' + instructor + '</span>';	  	  
+	  html+='</div>';		  
+	
+	  
+	  html+='</div>';
+	  
+	  
+      
+      	  
+      
       html += '</div>';
-      usersToBind[created] = username;
+      classesToBind[created] = uuid; //<--here is where created is important, in drawMessages it was used to store usernames in the array with 
+										//---the unique created attribute of messages as the pointer or w/e in the array. 
     }
-    if (html == "") { html = "No messages yet!"; }
-    $("#messages-list").html(html);
-    for(user in usersToBind) {
-      $('#'+user).bind('click', function(event) {
-        username = event.target.name;
-        followUser(username);
+    if (html == "") { html = "No classes yet!"; }
+    $("#messages-list").html(html);					
+   for(uuid in classesToBind) { 				//----and here the array is used to bind a click event on the follow button for every user
+      $('#'+uuid).bind('click', function(event) {  
+								//however i commented it out since we do not have that function for adding a class to a user yet but 
+			uuid = event.target.name;					//something like this array would be used to bind a button to each class.
+			addClass(uuid);			
       });
     }
-    //next show the next / previous buttons
+	
+    //next show the next / previous buttons	  <----------And that's about it, its messy but it works.
     if (feed.hasPreviousPage()) {
       $("#previous-btn-container").show();
     } else {
@@ -502,9 +550,17 @@ $(document).ready(function () {
     } else {
       $("#next-btn-container").hide();
     }
+	
 
     $(this).scrollTop(0);
   }
+   
+   
+   function enrollHandle(event){
+   console.log(event);
+   }
+
+ 
 
   /**
    *  Method to create the following relationship between two users
@@ -514,23 +570,23 @@ $(document).ready(function () {
    *  @return none
    *
    */
-  function followUser(username) {
+  function addClass(uuid) {
     if (!isLoggedIn()) return;
 
     //reset paging so we make sure our results start at the beginning
-    fullActivityFeed.resetPaging();
+    classFeed.resetPaging();
     userFeed.resetPaging();
 
     var options = {
       method:'POST',
-      endpoint:'users/me/following/users/' + username
+      endpoint:'users/me/enrolling/classes/' + uuid
     };
     client.request(options, function (err, data) {
       if (err) {
-        $('#now-following-text').html('Aw Shucks!  There was a problem trying to follow <strong>' + username + '</strong>');
+        $('#now-following-text').html('Aw Shucks!  There was a problem trying to add the class');
       } else {
-        $('#now-following-text').html('Congratulations! You are now following <strong>' + username + '</strong>');
-        showMyFeed();
+        $('#now-following-text').html('Congratulations! You added a class.');
+        showMyClasses();
       }
     });
   }
@@ -582,7 +638,7 @@ $(document).ready(function () {
           userFeed.resetPaging();
           showMyFeed();
         }
-        window.location = "#page-messages-list";
+        window.location = "#page-classes-list";
       }
     });
   }
