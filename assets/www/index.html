@@ -112,10 +112,39 @@
             </div>
           </div>
         </div>
+		
+		<!--<div data-role="page" data-theme="b" id="page-show-link">
+          <div style="float:right; width: 50%" data-role="header" data-theme="b" >
+            <h1>Class Link</h1>
+          </div>
+		  <div style="width: 50%; float: left">
+              <button id="btn-back">Back</button>
+          </div>		  
+          <div style="width: 100%; float: center" data-role="content">            
+            <iframe src="" id='class-link' width=100%;></iframe>
+           
+          </div>
+        </div>-->
+		
+		<div data-role="page" data-theme="b" id="page-show-link">
+          <div data-role="header" data-theme="b" data-position="fixed">
+            <h1>Messagee</h1>
+			<a href="#page-classes-list" id="btn-back" data-role="button">Back</a>
+          </div>
+		  <div data-role="content">
+		    <iframe src="" id='class-link' width=100%; height=500px;></iframe>
+        <div>
+          <h3>Users enrolled in this class:</h3><br>
+        </div>
+        <div id="users-list"  data-role="content">
+            No users enrolled yet.
+        </div>
+		   </div>		  
+		</div>
 
 
         <div data-role="page" data-theme="b" id="page-classes-list">
-          <div data-role="header" data-theme="b">
+          <div data-role="header" data-theme="b" data-position="fixed">
             <h1>Messagee</h1>
             <a href="#login" id="btn-logout" data-role="button">Logout</a>
             <a href="#page-update-account" id="btn-show-page-update-account" data-role="button" data-icon="gear" data-rel="dialog" data-transition="fade">Settings</a>
@@ -235,8 +264,9 @@
           </div>
         </div>
 
+			
 
-        <div data-role="page" data-theme="b" id="page-now-following">
+        <!-- <div data-role="page" data-theme="b" id="page-now-following">
           <div data-role="header" data-theme="b">
             <h1>Alert</h1>
           </div>
@@ -244,7 +274,7 @@
             <div id="now-following-text" style="height: 75px;"></div>
             <a href="#" data-rel="back" data-role="button" data-icon="delete">OK</a>
           </div>
-        </div>
+        </div> -->
 
 
     </body>

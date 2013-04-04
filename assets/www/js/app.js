@@ -33,19 +33,20 @@ $(document).ready(function () {
   * create client and set up vars
   ********************************************************************/
   var client = new Usergrid.Client({
-    orgName:'frankcarey', //your orgname goes here (not case sensitive) <------------------I changed the default to our org and appname which initally I 
-    appName:'sandbox1', //your appname goes here (not case sensitive)  --------hadn't I think it helped with my login problems.
+    orgName:'frankcarey', //your orgname goes here (not case sensitive)
+    appName:'sandbox1', //your appname goes here (not case sensitive) 
     logging: true, //optional - turn on logging, off by default
     buildCurl: true //optional - turn on curl commands, off by default
   });
 
   var appUser;
-  var classView = true;
-  //var fullActivityFeed;
+  var classView = true;  
   var userFeed;
   var classFeed;
   var defaultSubject = '*';
   var currentSubject;
+  
+  
 
   /*******************************************************************
   * bind the various click events
@@ -60,13 +61,13 @@ $(document).ready(function () {
   $('#btn-show-classes').bind('click', function(){
 	currentSubject = document.getElementById('subj').value;
 	});
+  $('#btn-search').bind('click', showFullClasses);
   $('#btn-show-create-message').bind('click', function() {
     $("#content").val('');
     $("#content").focus();
   });
-  $('#post-message').bind('click', postMessage);
-  $('#btn-search').bind('click', showFullClasses);  
-
+  //$('#post-message').bind('click', postMessage);<--I think this can be deleted.
+  
   //bind the next and previous buttons
   $('#btn-previous').bind('click', function() {
     if (classView) {
@@ -113,7 +114,13 @@ $(document).ready(function () {
   * default actions for page load
   ********************************************************************/
   //if the app was somehow loaded on another page, default to the login page
-  window.location = "#page-login";
+  if(!client.isLoggedIn()){
+    window.location = "#page-login";
+  }
+  else{
+    window.location = "#page-classes-list"
+  }
+
 
   //when the page loads, try to get the current user.  If a token is
   //stored and it is valid, then don't make them log in again
@@ -390,20 +397,20 @@ $(document).ready(function () {
     $('#btn-show-classes').removeClass('ui-btn-up-c');
     $('#btn-show-schedule').addClass('ui-btn-up-c');
 	
-    if  (userFeed) {
-      userFeed.resetPaging();
-      userFeed.fetch(function (err) {
-        if (err) {
-          alert('Could not get user feed. Please try again.');
-        } else {
-          drawClasses(userFeed);
-        }
-      });
-    } else {
+    // if  (userFeed) {
+    //   userFeed.resetPaging();
+    //   userFeed.fetch(function (err) {
+    //     if (err) {
+    //       alert('Could not get user feed. Please try again.');
+    //     } else {
+    //       drawClasses(userFeed);
+    //     }
+    //   });
+    // } else {
       //no feed obj yet, so make a new one
       var options = {
-        type:'users/me/enrolling/classes/',
-        qs:{"ql":"order by created desc"}
+        type:'users/me/enrolling/',
+        // qs:{"ql":"order by created desc"}
       }
       client.createCollection(options, function(err, collectionObj){
         if (err) {
@@ -414,7 +421,6 @@ $(document).ready(function () {
         }
       });
     }
-  }
 	
 	
   
@@ -428,110 +434,108 @@ $(document).ready(function () {
     var classesToBind = [];
     feed.resetEntityPointer();
     while(feed.hasNextEntity()) {
-      var message = feed.getNextEntity(), 
-	  uuid = message.get('uuid'),
-	  attrib = message.get('attributes'),
-	  course = message.get('course'),
-	  credits = 'Credits: ' + message.get('credits'),
-	  crn = 'CRN: ' + message.get('crn'),
-	  link = message.get('link'),
-	  location = 'Location: ' + message.get('sessions.location'),
-	  instructor = 'Instructor: ' + message.get('instructor'),
-	  days = 'Days: ' + message.get('sessions.days'),
-	  time = ' Time: ' + message.get('sessions.time')
-	  location2 = 'Location2: ' + message.get('sessions.location'),
-	  instructor2 =  'Instructor2: ' + message.get('instructor'),
-	  days2 = 'Days2: ' + message.get('sessions.days'),
-	  time2 = ' Time2: ' + message.get('sessions.time')
-	  title = message.get('title'),
-      created = message.get('created'),//<----created stored the 'created' attribute of a message, which a class doesn't have, so i used uuid since its' unique
-	  imageUrl = 'http://www.newpaltz.edu/images/spacer.gif';  //---you'll see below why it's important.
-	  
-	  
-	  
-						//v----------------------------This deals with emails and avatars for users so i commented it out
-      /**if ('email' in actor) {  
-        email = actor.email;
-        imageUrl = 'http://www.gravatar.com/avatar/' + MD5(email.toLowerCase()) + '?s=' + 50;
+      var classes = feed.getNextEntity(),	  
+	    uuid = classes.get('uuid'),
+  	  attrib = classes.get('attributes'),
+  	  course = classes.get('course'),
+  	  credits = 'Credits: ' + classes.get('credits'),
+  	  crn = 'CRN: ' + classes.get('crn'),
+  	  link = classes.get('link'),
+  	  location = 'Location: ' + classes._data.sessions[0].location,
+  	  instructor = 'Instructor: ' + classes._data.sessions[0].instructor,
+  	  days = 'Days: ' + classes._data.sessions[0].days,
+  	  time = ' Time: ' + classes._data.sessions[0].time,
+  	  //location2 = 'Location2: ' + classes.get('sessions.location'),
+  	  //instructor2 =  'Instructor2: ' + classes.get('instructor'),
+  	  //days2 = 'Days2: ' + classes.get('sessions.days'),
+  	  //time2 = ' Time2: ' + classes.get('sessions.time')
+  	  title = classes.get('title'),
+        created = classes.get('created'),
+  	  imageUrl = 'http://www.newpaltz.edu/images/spacer.gif';  //
+  	  //console.log(classes);
+  	  //Usergrid.Client.currentClass = classes;
+  	  
+  	  
+  	  html += '<div style="padding-left:5px; padding-right:5px; padding-top:5px; min-height: 25px;">';
+  	  
+  	  html +='<div style="width: 150px; float: right;>';
+        html += '<span style="float: right; padding-left: 10px">';
+  	  if (classView) {
+        html += '<a href="#page-now-following" id="'+created+'" name="'+uuid+'" data-role="button" data-rel="dialog" data-transition="fade">Add class</a>';
+  	  }
+      else{
+        html += '<a href="#page-now-following" id="'+created+'" name="'+uuid+'" data-role="button" data-rel="dialog" data-transition="fade">Remove class</a>';
       }
-      if (!email) {
-        if ('image' in actor && 'url' in actor.image) {
-          imageUrl = actor.image.url;
-        }
-      }
-      if (!imageUrl) {
-        imageUrl = 'http://www.gravatar.com/avatar/' + MD5('rod@apigee.com') + '?s=' + 50;
-      }
-	  
-	**/
-      formattedTime = 'time'; //<----------this would get the time from created and put it through the prettyDate() function but classes don't have a created
-								//--so I just hardcoded the word 'time'. NOTE: this is not why created is important, still below.
-	  
-	  
-		//v----This is where the html to be displayed is built and the variables stored above are used, I didn't change the format at all so it doesn't look
-		//--good or display all the info i just wanted to see it worked, and the formatting can be changed to whatever we'd like.
-      
-	  
-	  
-	  html += '<div style="padding-left:5px; padding-right:5px; padding-top:5px; min-height: 25px;"><img src="' + imageUrl + '" style="border none; height: 50px; width: 50px; float: left;padding-right: 10px"> ';
-	  
-	  html +='<div style="width: 150px; float: right;>';
-      html += '<span style="float: right; padding-left: 10px">';
-	  //if (username && username != appUser.get('username')) {
-      html += '<a href="#page-now-following" id="'+created+'" name="'+uuid+'" data-role="button" data-rel="dialog" data-transition="fade">Add class</a>';
-	  //}
-	  html+='</span>';
-	  html+='</div>';
-	  html +='<div style="width: 150px; float: right;>';
+  	  html+='</span>';
+  	  html+='</div>';
+  	  html +='<div style="width: 150px; float: right;>';
       html += '<span style="float: right"><strong>'+crn+'</strong></span>';
-	  html+='</div>';	 
-	  
-	  html +='<div style="width: 400px; float: left;>';
-      html += '<span style="float: left;padding-right: 10px"><a href=' + link + '><strong>' + title + '</strong></a></span>';	  	  
-	  html+='</div>';	
-	  html +='<div style="width: 150px; float: left;>';
+  	  html+='</div>';	 
+  	  
+  	  html +='<div style="width: 400px; float: left;>';
+
+      html += '<span style="float: left;padding-right: 10px"><a href="#page-show-link" id="link-' + created +'"><strong>' + title + '</strong></a></span>';
+
+      if(classView){
+  	     html+='<script>$("#link-'+created+'").bind("click", function(){document.getElementById("class-link").src="'+link+'";})</script>';
+      }
+      else{
+         html+='<script>$("#link-'+created+'").bind("click", function(){document.getElementById("class-link").src="'+link+'";})</script>';
+      }
+
+  	  html+='</div>';	
+  	  html +='<div style="width: 150px; float: left;>';
       html += '<span style="float: left;padding-right: 10px"><strong>' + days + '</strong></span>';	  	  
-	  html+='</div>';	
-	  html +='<div style="width: 150px; float: left;>';
+  	  html+='</div>';	
+  	  html +='<div style="width: 150px; float: left;>';
       html += '<span style="float: left;padding-right: 10px"><strong>' + time + '</strong></span>';	 ;	  
-	  html+='</div>';	
-	  html +='<div style="width: 200px; float: left;>';
+  	  html+='</div>';	
+  	  html +='<div style="width: 200px; float: left;>';
       html += '<span style="float: left;padding-right: 10px"><strong>' + location + '</strong></span>';	 ;	  
-	  html+='</div>';
-	  html += '</div>';
-	  
-	  html += '<div style="border-bottom: 2px solid #444;padding:5px; padding-bottom:10px; min-height: 25px;">';
-	  
-	  html +='<div style="width: 150px; float: right;>';
+  	  html+='</div>';
+  	  html += '</div>';
+  	  
+  	  html += '<div style="border-bottom: 2px solid #444;padding:5px; padding-bottom:10px; min-height: 25px;">';
+  	  
+  	  html +='<div style="width: 150px; float: right;>';
       html += '<span style="float: right>' + credits + '</span>';	  	  
-	  html+='</div>';
-	  
-	  html +='<div style="width: 400px; float: left;>';
+  	  html+='</div>';
+  	  
+  	  html +='<div style="width: 400px; float: left;>';
       html += '<span style="float: left;padding-right: 10px">'+course+'</span>';	  	  
-	  html+='</div>'
-	  html +='<div style="width: 350px; float: left;>';
+  	  html+='</div>'
+  	  html +='<div style="width: 350px; float: left;>';
       html += '<span style="float: left;padding-right: 10px">' + instructor + '</span>';	  	  
-	  html+='</div>';		  
-	
-	  
-	  html+='</div>';
-      
-      	  
-      
+  	  html+='</div>';		  
+  	
+  	  
+  	  html+='</div>';
+        
       html += '</div>';
-      classesToBind[created] = uuid; //<--here is where created is important, in drawMessages it was used to store usernames in the array with 
-										//---the unique created attribute of messages as the pointer or w/e in the array. 
+  	  
+        classesToBind[created] = uuid; //array of uuid's to bind button to.
     }
     if (html == "") { html = "No classes yet!"; }
-    $("#messages-list").html(html);					
-   for(uuid in classesToBind) { 				//----and here the array is used to bind a click event on the follow button for every user
-      $('#'+uuid).bind('click', function(event) {   //however i commented it out since we do not have that function for adding a class to a user yet but 
-        				//something like this array would be used to bind a button to each class.
-        addClass(uuid);
-      });
+    $("#messages-list").html(html);
+
+	  if (classView){
+       for(uuid in classesToBind) { 				//bind buttons to each class.
+          $('#'+uuid).bind('click', function(event) {  								
+    			uuid = event.target.name;					
+    			addClass(uuid);			
+          });
+        }
+    }
+    else{
+        for(uuid in classesToBind) {         //bind buttons to each class.
+          $('#'+uuid).bind('click', function(event) {                 
+          uuid = event.target.name;         
+          deleteClass(uuid);     
+            });
+        }
     }
 	
-    //next show the next / previous buttons	  <----------And that's about it, its messy but it works.
+    //next show the next / previous buttons
     if (feed.hasPreviousPage()) {
       $("#previous-btn-container").show();
     } else {
@@ -541,23 +545,33 @@ $(document).ready(function () {
       $("#next-btn-container").show();
     } else {
       $("#next-btn-container").hide();
-    }
-	
+    }	
 
     $(this).scrollTop(0);
+  }   
+
+  function drawUsers(feed){
+    var html = "";
+    var usersToBind = [];
+    feed.resetEntityPointer();
+    while(feed.hasNextEntity()) {
+      var user = feed.getNextEntity(), 
+          name = user.get('name'),
+          email = user.get('email'),
+          created = user.get('created');
+
+      html += '<div style="padding:10px; width:100%;">';
+
+      html += '<div>';
+      html += name + '<br>';
+      html += '</div>';
+      html += '</div>';
+    }
+
+    if (html == "") { html = "No users enrolled yet."; }
+    $("#users-list").html(html);   
   }
-   
-
- 
-
-  /**
-   *  Method to create the following relationship between two users
-   *
-   *  @method followUser
-   *  @param username - user to follow
-   *  @return none
-   *
-   */
+    
   function addClass(uuid) {
     if (!isLoggedIn()) return;
 
@@ -571,13 +585,52 @@ $(document).ready(function () {
     };
     client.request(options, function (err, data) {
       if (err) {
-        $('#now-following-text').html('Aw Shucks!  There was a problem trying to add the class');
+        $('#now-following-text').html('There was a problem trying to add the class');
       } else {
-        $('#now-following-text').html('Congratulations! You added a class.');
         showMyClasses();
       }
     });
   }
+
+function deleteClass(uuid) {
+    if (!isLoggedIn()) return;
+
+    //reset paging so we make sure our results start at the beginning
+    classFeed.resetPaging();
+    userFeed.resetPaging();
+
+    var options = {
+      method:'DELETE',
+      endpoint:'users/me/enrolling/classes/' + uuid
+    };
+    client.request(options, function (err, data) {
+      if (err) {
+        $('#now-following-text').html('Aw Shucks!  There was a problem trying to remove the class');
+      } else {
+        $('#now-following-text').html('Congratulations! You removed the class.');
+        showMyClasses();
+      }
+    });
+  }
+
+function showUsers(uuid) {
+    if(!isLoggedIn()) return;
+    var classId = uuid;
+    var users;
+
+    var options = {
+      type:'classes/' + classId + '/connecting/enrolling/',
+      // qs:{"ql":"order by created desc"}
+    }
+    client.createCollection(options, function(err, collectionObj){
+      if (err) {
+       alert('Could not get user feed. Please try again.');
+      } else {
+        userFeed = collectionObj;
+        drawUsers(users);
+      }
+    });
+}
 
   /**
    *  Method to handle the create message form submission.  The
