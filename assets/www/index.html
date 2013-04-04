@@ -11,7 +11,265 @@
 	<div class="app">
 		<div data-role="page" data-theme="b" id="page-login">
           <div data-role="header" data-theme="b">
+            <h1>Messagee</h1><!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
+    <style type="text/css">.error{ background-color: #ffaaaa; } </style>
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+    <script src="js/usergrid.js" type="text/javascript"></script>
+    <script src="js/extensions/usergrid.validation.js" type="text/javascript"></script>
+    <script src="js/app.js" type="text/javascript"></script>
+  </head>
+  <body>
+
+        <div data-role="page" data-theme="b" id="page-login">
+          <div data-role="header" data-theme="b">
             <h1>Messagee</h1>
+          </div>
+          <div data-role="content">
+            <h3>Messagee is a sample messaging app, like Twitter</h3>
+            <p>
+              <h4>Log in using your Messagee account.</h4>
+              Don&apos;t have an account? use our test account (username: myuser / password: mypass), or create a new one!
+            </p>
+            <span id="login-section-error"></span>
+            <form name="form-login" id="form-login">
+              <label for="username">Username</label>
+              <input type="text" name="username" id="username" class="span4" />
+              <label for="password">Password</label>
+              <input type="password" name="password" id="password" class="span4" />
+            </form>
+            <div style="width: 50%; float: left">
+              <a href="#login" id="btn-login" data-role="button">Login</a>
+            </div>
+            <div style="width: 50%; float: right">
+              <a href="#page-new-account" id="btn-show-create-new-account" data-role="button" data-rel="dialog" data-transition="pop">New Account</a>
+            </div>
+          </div>
+          <div data-role="footer" data-position="fixed">
+            <h1>&copy; Apigee</h1>
+          </div>
+        </div>
+
+        <div data-role="page" data-theme="b" id="page-new-account">
+          <div data-role="header" data-theme="b">
+            <h1>Messagee</h1>
+          </div>
+          <div data-role="content">
+            <p>Account Info</p>
+            <form name="form-create-new-account" id="form-create-new-account">
+              <label for="new-name">Name</label>
+              <input type="text" name="new-name" id="new-name" class="span4" />
+              <label for="new-email">Email</label>
+              <input type="text" name="new-email" id="new-email" class="span4" />
+              <label for="new-username">Username</label>
+              <input type="text" name="new-username" id="new-username" class="span4" />
+              <label for="new-password">Password</label>
+              <input type="password" name="new-password" id="new-password" class="span4" />
+            </form>
+            <div style="width: 50%; float: left">
+              <button id="btn-create-new-account">Go!</button>
+            </div>
+            <div style="width: 50%; float: right">
+              <a href="#login" id="btn-close-update-account-page" data-role="button">Close</a>
+            </div>
+          </div>
+        </div>
+
+
+        <div data-role="page" data-theme="b" id="page-update-account">
+          <div data-role="header" data-theme="b">
+            <h1>Messagee</h1>
+          </div>
+          <div data-role="content">
+            <div id="user-message-update-account"></div>
+            <p>Account Info</p>
+            <form name="form-update-new-account" id="form-update-new-account">
+              <label for="update-name">Name</label>
+              <input type="text" name="update-name" id="update-name" class="span4" />
+              <label for="update-email">Email</label>
+              <input type="text" name="update-email" id="update-email" class="span4" />
+              <label for="update-username">Username</label>
+              <input type="text" name="update-username" id="update-username" class="span4" />
+              <label for="update-oldpassword">Current Password</label>
+              <input type="password" name="update-oldpassword" id="update-oldpassword" class="span4" />
+              <label for="update-newpassword">New Password</label>
+              <input type="password" name="update-newpassword" id="update-newpassword" class="span4" />
+            </form>
+            <div style="width: 50%; float: left">
+              <button id="btn-update-account">Update</button>
+            </div>
+            <div style="width: 50%; float: right">
+              <a href="#page-classes-list" id="btn-close" data-role="button">Close</a>
+            </div>
+          </div>
+        </div>
+		
+		<!--<div data-role="page" data-theme="b" id="page-show-link">
+          <div style="float:right; width: 50%" data-role="header" data-theme="b" >
+            <h1>Class Link</h1>
+          </div>
+		  <div style="width: 50%; float: left">
+              <button id="btn-back">Back</button>
+          </div>		  
+          <div style="width: 100%; float: center" data-role="content">            
+            <iframe src="" id='class-link' width=100%;></iframe>
+           
+          </div>
+        </div>-->
+		
+		<div data-role="page" data-theme="b" id="page-show-link">
+          <div data-role="header" data-theme="b">
+            <h1>Messagee</h1>
+			<a href="#page-classes-list" id="btn-back" data-role="button">Back</a>
+          </div>
+		  <div data-role="content">
+		  <iframe src="" id='class-link' width=100%; height=500px;></iframe>
+		  </div>		  
+		</div>
+
+
+        <div data-role="page" data-theme="b" id="page-classes-list">
+          <div data-role="header" data-theme="b">
+            <h1>Messagee</h1>
+            <a href="#login" id="btn-logout" data-role="button">Logout</a>
+            <a href="#page-update-account" id="btn-show-page-update-account" data-role="button" data-icon="gear" data-rel="dialog" data-transition="fade">Settings</a>
+          </div>
+          <a href="#page-search-classes" id="btn-show-search-classes" data-role="button" data-rel="dialog" data-transition="fade">Search Classes</a>
+          <div style="width: 50%; float: left">
+              <a href="#" data-role="button" data-icon="home" id="btn-show-schedule">My Schedule</a>
+          </div>
+          <div style="width: 50%; float: right">
+            <a href="#" data-role="button" data-icon="grid" id="btn-show-classes" class="ui-btn-up-c">Find Classes</a>
+          </div>
+          <div id="messages-list"  data-role="content">
+              No classes yet!
+          </div>
+          <div id="feed-btn-container"  data-role="content">
+            <div style="width: 50%; float: left" id="previous-btn-container">
+              <button id="btn-previous" data-role="button" data-icon="arrow-l">Previous</button>
+            </div>
+            <div style="width: 50%; float: right" id="next-btn-container">
+              <button id="btn-next" data-role="button" data-icon="arrow-r" data-iconpos="right">Next</button>
+            </div>
+          </div>
+          <div data-role="footer" data-position="fixed">
+            <h1>&copy; Apigee</h1>
+          </div>
+        </div>
+
+
+        <div data-role="page" data-theme="b" id="page-search-classes">
+          <div data-role="header" data-theme="b">
+            <h1>Search Classes</h1>
+          </div>
+          <div data-role="content">
+           <form class="form" id="search-form" method="post" name="search"><!--action="javascript:showFullClasses(document.getElementById('subj').value)",-->
+		   <div class="field-block">
+          <label class="bold" for="subj">Subject</label>
+          <select class="field" id="subj" name="subj">
+            <option value="*">All</option>
+    
+			<option value="Ancient World Studies">Ancient World Studies</option>
+			<option value="Anthropology">Anthropology</option>
+			<option value="Arabic">Arabic</option>
+			<option value="Art Education">Art Education</option>
+			<option value="Art History">Art History</option>
+			<option value="Art Studio">Art Studio</option>
+			<option value="Asian Studies">Asian Studies</option>
+			<option value="Biochemistry">Biochemistry</option>
+			<option value="Biology">Biology</option>
+			<option value="Black Studies">Black Studies</option>
+			<option value="Business Administration">Business Administration</option>
+			<option value="Chemistry">Chemistry</option>
+			<option value="Chinese">Chinese</option>
+			<option value="Communication Disorders">Communication Disorders</option>
+			<option value="Communication and Media">Communication and Media</option>
+			<option value="Computer Science">Computer Science</option>
+			<option value="Counseling">Counseling</option>
+			<option value="Deaf Studies">Deaf Studies</option>
+			<option value="Deaf Studies">Economics</option>
+			<option value="Education Interdisciplinary">Education Interdisciplinary</option>
+			<option value="Educational Administration">Educational Administration</option>
+			<option value="Educational Studies">Educational Studies</option>
+			<option value="Elementary Education">Elementary Education</option>
+			<option value="Engineering-Computer">Engineering-Computer</option>
+			<option value="Engineering-Electrical">Engineering-Electrical</option>
+			<option value="Engineering-General">Engineering-General</option>
+			<option value="English">English</option>
+			<option value="English as a Second Language">English as a Second Language</option>
+			<option value="Environmental Geochemical Sci">Environmental Geochemical Sci</option>
+			<option value="Environmental Science">Environmental Science</option>
+			<option value="Environmental Studies">Environmental Studies</option>
+			<option value="Evolutionary Studies">Evolutionary Studies</option>
+			<option value="Film and Video Studies">Film and Video Studies</option>
+			<option value="French">French</option>
+			<option value="Geography">Geography</option>
+			<option value="Geology">Geology</option>
+			<option value="German">German</option>
+			<option value="History">History</option>
+			<option value="Honors">Honors</option>
+			<option value="International Relations">International Relations</option>
+			<option value="Italian">Italian</option>
+			<option value="Italian Studies">Italian Studies</option>
+			<option value="Japanese">Japanese</option>
+			<option value="Jewish Studies">Jewish Studies</option>
+			<option value="Journalism">Journalism</option>
+			<option value="Kiswahili">Kiswahili</option>
+			<option value="Latin Amer & Caribbean Studies">Latin Amer & Caribbean Studies</option>
+			<option value="Law and Related Legal Studies">Law and Related Legal Studies</option>
+			<option value="Linguistics">Linguistics</option>
+			<option value="Mathematics">Mathematics</option>
+			<option value="Medieval/Early Modern Studies">Medieval/Early Modern Studies</option>
+			<option value="Music">Music</option>
+			<option value="Native American Studies">Native American Studies</option>
+			<option value="Philosophy">Philosophy</option>
+			<option value="Physics">Physics</option>
+			<option value="Political Science">Political Science</option>
+			<option value="Psychology">Psychology</option>
+			<option value="Religious Studies">Religious Studies</option>
+			<option value="Russian">Russian</option>
+			<option value="Secondary Education">Secondary Education</option>
+			<option value="Sociology">Sociology</option>
+			<option value="Spanish">Spanish</option>
+			<option value="Special Education">Special Education</option>
+			<option value="Study Abroad">Study Abroad</option>
+			<option value="Theater Arts">Theater Arts</option>
+			<option value="Women's,Gender, & Sexuality St">Women's,Gender, & Sexuality St</option>
+
+          </select>
+        </div>
+
+        <div class="field-block" style="width: 50%; float: left">
+          <!--<input type="submit" value="Search">-->
+		  <button id="btn-search" data-role="button">Search</button>
+        </div>
+        <div style="width: 50%; float: right">
+              <a href="#page-classes-list" id="btn-close-new-message" data-role="button">Cancel</a>
+        </div>
+          </div>
+        </div>
+
+			
+
+        <div data-role="page" data-theme="b" id="page-now-following">
+          <div data-role="header" data-theme="b">
+            <h1>Alert</h1>
+          </div>
+          <div data-role="content">
+            <div id="now-following-text" style="height: 75px;"></div>
+            <a href="#" data-rel="back" data-role="button" data-icon="delete">OK</a>
+          </div>
+        </div>
+
+
+    </body>
+</html>
+
           </div>
           <div data-role="content">
             <h3>Messagee is a sample messaging app, like Twitter</h3>
