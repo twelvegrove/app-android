@@ -15,12 +15,12 @@
 
         <div data-role="page" data-theme="b" id="page-login">
           <div data-role="header" data-theme="b">
-            <h1>Messagee</h1>
+            <h1>Almamas</h1>
           </div>
           <div data-role="content">
-            <h3>Messagee is a sample messaging app, like Twitter</h3>
+            <h3>Almamas is a sample messaging app, like Twitter</h3>
             <p>
-              <h4>Log in using your Messagee account.</h4>
+              <h4>Log in using your Almamas account.</h4>
               Don&apos;t have an account? use our test account (username: myuser / password: mypass), or create a new one!
             </p>
             <span id="login-section-error"></span>
@@ -38,13 +38,13 @@
             </div>
           </div>
           <div data-role="footer" data-position="fixed">
-            <h1>&copy; Apigee</h1>
+            <h1>&copy; Almamas</h1>
           </div>
         </div>
 
         <div data-role="page" data-theme="b" id="page-new-account">
           <div data-role="header" data-theme="b">
-            <h1>Messagee</h1>
+            <h1>Almamas</h1>
           </div>
           <div data-role="content">
             <p>Account Info</p>
@@ -62,7 +62,7 @@
               <button id="btn-create-new-account">Go!</button>
             </div>
             <div style="width: 50%; float: right">
-              <a href="#login" id="btn-close-update-account-page" data-role="button">Close</a>
+              <a href="#page-login" id="btn-close-update-account-page" data-role="button">Close</a>
             </div>
           </div>
         </div>
@@ -70,7 +70,7 @@
 
         <div data-role="page" data-theme="b" id="page-update-account">
           <div data-role="header" data-theme="b">
-            <h1>Messagee</h1>
+            <h1>Almamas</h1>
           </div>
           <div data-role="content">
             <div id="user-message-update-account"></div>
@@ -95,40 +95,40 @@
             </div>
           </div>
         </div>
-		
+
 		<!--<div data-role="page" data-theme="b" id="page-show-link">
           <div style="float:right; width: 50%" data-role="header" data-theme="b" >
             <h1>Class Link</h1>
           </div>
 		  <div style="width: 50%; float: left">
               <button id="btn-back">Back</button>
-          </div>		  
-          <div style="width: 100%; float: center" data-role="content">            
+          </div>
+          <div style="width: 100%; float: center" data-role="content">
             <iframe src="" id='class-link' width=100%;></iframe>
-           
+
           </div>
         </div>-->
-		
+
 		<div data-role="page" data-theme="b" id="page-show-link">
           <div data-role="header" data-theme="b" data-position="fixed">
-            <h1>Messagee</h1>
+            <h1>Almamas</h1>
 			<a href="#page-classes-list" id="btn-back" data-role="button">Back</a>
           </div>
-		  <div data-role="content">
+		  <div style='width:100%'>
 		    <iframe src="" id='class-link' width=100%; height=500px;></iframe>
-        <div>
+        <div style='padding-left:20px'>
           <h3>Users enrolled in this class:</h3><br>
         </div>
         <div id="users-list"  data-role="content">
-            No users enrolled yet.
+            <!-- No users enrolled yet. -->
         </div>
-		   </div>		  
+		   </div>
 		</div>
 
 
         <div data-role="page" data-theme="b" id="page-classes-list">
           <div data-role="header" data-theme="b" data-position="fixed">
-            <h1>Messagee</h1>
+            <h1>Almamas</h1>
             <a href="#login" id="btn-logout" data-role="button">Logout</a>
             <a href="#page-update-account" id="btn-show-page-update-account" data-role="button" data-icon="gear" data-rel="dialog" data-transition="fade">Settings</a>
           </div>
@@ -151,7 +151,7 @@
             </div>
           </div>
           <div data-role="footer" data-position="fixed">
-            <h1>&copy; Apigee</h1>
+            <h1>&copy; Almamas</h1>
           </div>
         </div>
 
@@ -166,7 +166,7 @@
           <label class="bold" for="subj">Subject</label>
           <select class="field" id="subj" name="subj">
             <option value="*">All</option>
-    
+
 			<option value="Ancient World Studies">Ancient World Studies</option>
 			<option value="Anthropology">Anthropology</option>
 			<option value="Arabic">Arabic</option>
@@ -247,7 +247,7 @@
           </div>
         </div>
 
-			
+
 
         <!-- <div data-role="page" data-theme="b" id="page-now-following">
           <div data-role="header" data-theme="b">
