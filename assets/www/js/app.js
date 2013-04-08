@@ -26,7 +26,7 @@
  *
  *  This file contains the main program logic for Messagee.
  */
- 
+
 $(document).ready(function () {
 
   /*******************************************************************
@@ -34,19 +34,18 @@ $(document).ready(function () {
   ********************************************************************/
   var client = new Usergrid.Client({
     orgName:'frankcarey', //your orgname goes here (not case sensitive)
-    appName:'sandbox1', //your appname goes here (not case sensitive) 
+    appName:'sandbox1', //your appname goes here (not case sensitive)
     logging: true, //optional - turn on logging, off by default
     buildCurl: true //optional - turn on curl commands, off by default
   });
 
   var appUser;
-  var classView = true;  
+  var classView = true;
   var userFeed;
   var classFeed;
   var defaultSubject = '*';
   var currentSubject;
-  
-  
+
 
   /*******************************************************************
   * bind the various click events
@@ -55,7 +54,7 @@ $(document).ready(function () {
   $('#btn-show-page-update-account').bind('click', pageUpdateAccount);
   $('#btn-logout').bind('click', logout);
   $('#btn-create-new-account').bind('click', createNewUser);
-  $('#btn-update-account').bind('click', updateUser);  
+  $('#btn-update-account').bind('click', updateUser);
   $('#btn-show-schedule').bind('click', showMyClasses);
   $('#btn-show-classes').bind('click', showFullClasses);
   $('#btn-show-classes').bind('click', function(){
@@ -67,7 +66,7 @@ $(document).ready(function () {
     $("#content").focus();
   });
   //$('#post-message').bind('click', postMessage);<--I think this can be deleted.
-  
+
   //bind the next and previous buttons
   $('#btn-previous').bind('click', function() {
     if (classView) {
@@ -118,7 +117,7 @@ $(document).ready(function () {
     window.location = "#page-login";
   }
   else{
-    window.location = "#page-classes-list"
+    window.location = "#page-classes-list";
   }
 
 
@@ -169,7 +168,7 @@ $(document).ready(function () {
               if (client.isLoggedIn()){
                 appUser = user;
                // showFullFeed();
-			   showMyClasses();//<--------------------------------------------------------------showFullClasses()
+			         showMyClasses();//<--------------------------------------------------------------showFullClasses()
               }
             }
           });
@@ -196,7 +195,7 @@ $(document).ready(function () {
       window.location = "#page-login";
       return false;
     }
-    return true
+      return true;
   }
 
   /**
@@ -265,7 +264,7 @@ $(document).ready(function () {
         password:password,
         name:name,
         email:email
-      }
+      };
 
       client.createEntity(options, function (err, newUser) {
         if (err){
@@ -336,15 +335,15 @@ $(document).ready(function () {
     }
   }
 
-   
-  
+
+
   /**Function to get classes from the API
-  
+
   **/
   function showFullClasses(subject) {	//<-------------showFullClasses() Function(copied from showFullFeed), this function makes the query, stores the result
 								//--and passed it to another method, drawClasses.
     if (!isLoggedIn()) return;
-	
+
 	var subj = document.getElementById('subj').value ;
 
     //make sure we are on the classes page
@@ -357,8 +356,8 @@ $(document).ready(function () {
 
 			//v--This would check if a feed already exists(a collection object) and use that instead of creating a new one, i commented it
 				//---to see if that's why the &limit wasn't working and b/c I'm not sure if we want that.
-	/**if  (classFeed) {	
-                            
+	/**if  (classFeed) {
+
       classFeed.resetPaging();
       classFeed.fetch(function (err) {
         if (err) {
@@ -368,14 +367,14 @@ $(document).ready(function () {
         }
       });
     } else {
-	
-**/		
-      var options = {	//<--Here a collection Object is created, the function createCollection is from usergrid.js, is basically makes a query and 
-						//--stores what's returned in collectionObj, which is stored in classFeed, defined as a global variable up top, which is 
+
+**/
+      var options = {	//<--Here a collection Object is created, the function createCollection is from usergrid.js, is basically makes a query and
+						//--stores what's returned in collectionObj, which is stored in classFeed, defined as a global variable up top, which is
 						//--passed to drawclasses(copied from drawmessages)
 		type:'classes',
         qs:{"ql": "select * where subject = '" + subj + "'"}
-      }
+      };
       //no feed obj yet, so make a new one
       client.createCollection(options, function(err, collectionObj){
         if (err) {
@@ -386,7 +385,7 @@ $(document).ready(function () {
         }
       });
     }
-	
+
 	function showMyClasses() {
     if (!isLoggedIn()) return;
 
@@ -396,7 +395,7 @@ $(document).ready(function () {
     classView = false;
     $('#btn-show-classes').removeClass('ui-btn-up-c');
     $('#btn-show-schedule').addClass('ui-btn-up-c');
-	
+
     // if  (userFeed) {
     //   userFeed.resetPaging();
     //   userFeed.fetch(function (err) {
@@ -411,7 +410,7 @@ $(document).ready(function () {
       var options = {
         type:'users/me/enrolling/',
         // qs:{"ql":"order by created desc"}
-      }
+      };
       client.createCollection(options, function(err, collectionObj){
         if (err) {
          alert('Could not get user feed. Please try again.');
@@ -421,43 +420,52 @@ $(document).ready(function () {
         }
       });
     }
-	
-	
-  
+
+
+
   /**Function to parse the classes of the feed
-  
+
   **/
-   function drawClasses(feed) {  //<-------drawClasses() function, copied from drawMessages, takes the collection object, classFeed, and handles getting 
+   function drawClasses(feed) {  //<-------drawClasses() function, copied from drawMessages, takes the collection object, classFeed, and handles getting
 								 //----getting the information, as seen in the .get('title') and so on below, which act on message which stores the NextEntity
 								 //---if one exists.
     var html = "";
     var classesToBind = [];
     feed.resetEntityPointer();
     while(feed.hasNextEntity()) {
-      var classes = feed.getNextEntity(),	  
-	    uuid = classes.get('uuid'),
-  	  attrib = classes.get('attributes'),
-  	  course = classes.get('course'),
-  	  credits = 'Credits: ' + classes.get('credits'),
-  	  crn = 'CRN: ' + classes.get('crn'),
-  	  link = classes.get('link'),
-  	  location = 'Location: ' + classes._data.sessions[0].location,
-  	  instructor = 'Instructor: ' + classes._data.sessions[0].instructor,
-  	  days = 'Days: ' + classes._data.sessions[0].days,
-  	  time = ' Time: ' + classes._data.sessions[0].time,
-  	  //location2 = 'Location2: ' + classes.get('sessions.location'),
-  	  //instructor2 =  'Instructor2: ' + classes.get('instructor'),
-  	  //days2 = 'Days2: ' + classes.get('sessions.days'),
-  	  //time2 = ' Time2: ' + classes.get('sessions.time')
-  	  title = classes.get('title'),
+      var classes = feed.getNextEntity(),
+  	    uuid = classes.get('uuid'),
+    	  attrib = classes.get('attributes'),
+    	  course = classes.get('course'),
+    	  credits = 'Credits: ' + classes.get('credits'),
+    	  crn = 'CRN: ' + classes.get('crn'),
+    	  link = classes.get('link'),
+    	  location = 'Location: ' + classes._data.sessions[0].location,
+    	  instructor = 'Instructor: ' + classes._data.sessions[0].instructor,
+    	  days = 'Days: ' + classes._data.sessions[0].days,
+    	  time = ' Time: ' + classes._data.sessions[0].time,
+    	  //location2 = 'Location2: ' + classes.get('sessions.location'),
+    	  //instructor2 =  'Instructor2: ' + classes.get('instructor'),
+    	  //days2 = 'Days2: ' + classes.get('sessions.days'),
+    	  //time2 = ' Time2: ' + classes.get('sessions.time')
+    	  title = classes.get('title'),
         created = classes.get('created'),
-  	  imageUrl = 'http://www.newpaltz.edu/images/spacer.gif';  //
+    	  imageUrl = 'http://www.newpaltz.edu/images/spacer.gif',
+        session2 = false;
   	  //console.log(classes);
   	  //Usergrid.Client.currentClass = classes;
-  	  
-  	  
+
+        if (classes._data.sessions[1].location != null){
+          var location2 = 'Location2: ' + classes._data.sessions[1].location,
+          instructor2 = 'Instructor2: ' + classes._data.sessions[1].instructor,
+          days2 = 'Days2: ' + classes._data.sessions[1].days,
+          time2 = ' Time2: ' + classes._data.sessions[1].time;
+          session2 = true;
+        }
+
+
   	  html += '<div style="padding-left:5px; padding-right:5px; padding-top:5px; min-height: 25px;">';
-  	  
+
   	  html +='<div style="width: 150px; float: right;>';
         html += '<span style="float: right; padding-left: 10px">';
   	  if (classView) {
@@ -466,75 +474,83 @@ $(document).ready(function () {
       else{
         html += '<a href="#page-now-following" id="'+created+'" name="'+uuid+'" data-role="button" data-rel="dialog" data-transition="fade">Remove class</a>';
       }
-  	  html+='</span>';
-  	  html+='</div>';
+  	  html +='</span>';
+  	  html +='</div>';
   	  html +='<div style="width: 150px; float: right;>';
       html += '<span style="float: right"><strong>'+crn+'</strong></span>';
-  	  html+='</div>';	 
-  	  
+  	  html+='</div>';
+
   	  html +='<div style="width: 400px; float: left;>';
 
       html += '<span style="float: left;padding-right: 10px"><a href="#page-show-link" id="link-' + created +'"><strong>' + title + '</strong></a></span>';
 
-      if(classView){
-  	     html+='<script>$("#link-'+created+'").bind("click", function(){document.getElementById("class-link").src="'+link+'";})</script>';
-      }
-      else{
-         html+='<script>$("#link-'+created+'").bind("click", function(){document.getElementById("class-link").src="'+link+'";})</script>';
+      html+='<script>$("#link-'+created+'").bind("click", function(){document.getElementById("class-link").src="'+link+'";})</script>';
+
+
+      if(!classView){
+        var userHtml = showUsers(uuid);
+        if (userHtml == undefined)
+          userHtml = 'No users enrolled yet.';
+        // console.log('userHtml = ' + userHtml);
+        // $("#users-list").html(userHtml);
+        // console.log("right before insert html");
+        // // html+='<script>$("#link'+created+'").bind("click", function(uuid){console.log("in script tags");var id = uuid;showUsers(id);})</script>';
+        // // html+=$('#link-'+created).bind('click', function(){document.getElementById('users-list').html(userHtml)});
       }
 
-  	  html+='</div>';	
+  	  html+='</div>';
   	  html +='<div style="width: 150px; float: left;>';
-      html += '<span style="float: left;padding-right: 10px"><strong>' + days + '</strong></span>';	  	  
-  	  html+='</div>';	
+      html += '<span style="float: left;padding-right: 10px"><strong>' + days + '</strong></span>';
+  	  html+='</div>';
   	  html +='<div style="width: 150px; float: left;>';
-      html += '<span style="float: left;padding-right: 10px"><strong>' + time + '</strong></span>';	 ;	  
-  	  html+='</div>';	
+      html += '<span style="float: left;padding-right: 10px"><strong>' + time + '</strong></span>';	 ;
+  	  html+='</div>';
   	  html +='<div style="width: 200px; float: left;>';
-      html += '<span style="float: left;padding-right: 10px"><strong>' + location + '</strong></span>';	 ;	  
+      html += '<span style="float: left;padding-right: 10px"><strong>' + location + '</strong></span>';	 ;
   	  html+='</div>';
   	  html += '</div>';
-  	  
+
   	  html += '<div style="border-bottom: 2px solid #444;padding:5px; padding-bottom:10px; min-height: 25px;">';
-  	  
+
   	  html +='<div style="width: 150px; float: right;>';
-      html += '<span style="float: right>' + credits + '</span>';	  	  
+      html += '<span style="float: right>' + credits + '</span>';
   	  html+='</div>';
-  	  
+
   	  html +='<div style="width: 400px; float: left;>';
-      html += '<span style="float: left;padding-right: 10px">'+course+'</span>';	  	  
+      html += '<span style="float: left;padding-right: 10px">'+course+'</span>';
   	  html+='</div>'
   	  html +='<div style="width: 350px; float: left;>';
-      html += '<span style="float: left;padding-right: 10px">' + instructor + '</span>';	  	  
-  	  html+='</div>';		  
-  	
-  	  
+      html += '<span style="float: left;padding-right: 10px">' + instructor + '</span>';
   	  html+='</div>';
-        
+
+
+  	  html+='</div>';
+
       html += '</div>';
-  	  
-        classesToBind[created] = uuid; //array of uuid's to bind button to.
+
+      classesToBind[created] = uuid; //array of uuid's to bind button to.
     }
+    // userHtml = "";
     if (html == "") { html = "No classes yet!"; }
     $("#messages-list").html(html);
 
 	  if (classView){
        for(uuid in classesToBind) { 				//bind buttons to each class.
-          $('#'+uuid).bind('click', function(event) {  								
-    			uuid = event.target.name;					
-    			addClass(uuid);			
+          $('#'+uuid).bind('click', function(event) {
+    			uuid = event.target.name;
+    			addClass(uuid);
           });
         }
     }
     else{
         for(uuid in classesToBind) {         //bind buttons to each class.
-          $('#'+uuid).bind('click', function(event) {                 
-          uuid = event.target.name;         
-          deleteClass(uuid);     
+          $('#'+uuid).bind('click', function(event) {
+          uuid = event.target.name;
+          deleteClass(uuid);
             });
         }
     }
-	
+
     //next show the next / previous buttons
     if (feed.hasPreviousPage()) {
       $("#previous-btn-container").show();
@@ -545,33 +561,55 @@ $(document).ready(function () {
       $("#next-btn-container").show();
     } else {
       $("#next-btn-container").hide();
-    }	
+    }
 
     $(this).scrollTop(0);
-  }   
+  }
+
+  function showUsers(uuid) {
+      console.log("in showUsers");
+      console.log(uuid);
+      if(!isLoggedIn()) return;
+      var classId = uuid;
+      // console.log(uuid);
+      var users;
+      var userHtml;
+
+      var options = {
+        type:'classes/' + classId + '/connecting/enrolling/',
+      }
+      client.createCollection(options, function(err, collectionObj){
+        if (err) {
+         alert('Could not get user feed. Please try again.');
+        } else {
+          users = collectionObj;
+          userHtml = drawUsers(users);
+        }
+        console.log('userhtml = ' + userHtml);
+        //$('#users-list').html(userHtml1);
+        // $('#link'+created).bind('click', function(){$('#users-list').html(userHtml);});
+      });
+  }
 
   function drawUsers(feed){
-    var html = "";
     var usersToBind = [];
+    var userHtml = '';
     feed.resetEntityPointer();
     while(feed.hasNextEntity()) {
-      var user = feed.getNextEntity(), 
+      var user = feed.getNextEntity(),
           name = user.get('name'),
           email = user.get('email'),
           created = user.get('created');
 
-      html += '<div style="padding:10px; width:100%;">';
-
-      html += '<div>';
-      html += name + '<br>';
-      html += '</div>';
-      html += '</div>';
+      userHtml+= '<div style="padding-left:10px; width:100%;">';
+      userHtml+= name + '<br>';
+      userHtml+= '</div>';
     }
-
-    if (html == "") { html = "No users enrolled yet."; }
-    $("#users-list").html(html);   
+     $('#users-list').html(userHtml);
+     console.log(userHtml);
+    // $('#link'+created).bind('click', function(){$('#users-list').html(userHtml2);});
   }
-    
+
   function addClass(uuid) {
     if (!isLoggedIn()) return;
 
@@ -613,24 +651,6 @@ function deleteClass(uuid) {
     });
   }
 
-function showUsers(uuid) {
-    if(!isLoggedIn()) return;
-    var classId = uuid;
-    var users;
-
-    var options = {
-      type:'classes/' + classId + '/connecting/enrolling/',
-      // qs:{"ql":"order by created desc"}
-    }
-    client.createCollection(options, function(err, collectionObj){
-      if (err) {
-       alert('Could not get user feed. Please try again.');
-      } else {
-        userFeed = collectionObj;
-        drawUsers(users);
-      }
-    });
-}
 
   /**
    *  Method to handle the create message form submission.  The
