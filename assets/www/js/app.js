@@ -393,7 +393,7 @@ $(document).ready(function() {
     // } else {
     //no feed obj yet, so make a new one
     var options = {
-      type: 'users/me/enrolling/',
+      type: 'users/me/enrolling/'
       // qs:{"ql":"order by created desc"}
     };
     client.createCollection(options, function(err, collectionObj) {
@@ -440,7 +440,7 @@ $(document).ready(function() {
       //console.log(classes);
       //Usergrid.Client.currentClass = classes;
 
-      if (classes._data.sessions[1].location != null) {
+      if (classes._data.sessions[1].location !== null) {
         var location2 = 'Location2: ' + classes._data.sessions[1].location,
           instructor2 = 'Instructor2: ' + classes._data.sessions[1].instructor,
           days2 = 'Days2: ' + classes._data.sessions[1].days,
@@ -473,7 +473,7 @@ $(document).ready(function() {
 
       if (!classView) {
         var userHtml = showUsers(uuid);
-        if (userHtml == undefined) userHtml = 'No users enrolled yet.';
+        if (userHtml === undefined) userHtml = 'No users enrolled yet.';
         // console.log('userHtml = ' + userHtml);
         // $("#users-list").html(userHtml);
         // console.log("right before insert html");
@@ -486,10 +486,10 @@ $(document).ready(function() {
       html += '<span style="float: left;padding-right: 10px"><strong>' + days + '</strong></span>';
       html += '</div>';
       html += '<div style="width: 150px; float: left;>';
-      html += '<span style="float: left;padding-right: 10px"><strong>' + time + '</strong></span>';;
+      html += '<span style="float: left;padding-right: 10px"><strong>' + time + '</strong></span>';
       html += '</div>';
       html += '<div style="width: 200px; float: left;>';
-      html += '<span style="float: left;padding-right: 10px"><strong>' + location + '</strong></span>';;
+      html += '<span style="float: left;padding-right: 10px"><strong>' + location + '</strong></span>';
       html += '</div>';
       html += '</div>';
 
@@ -501,7 +501,7 @@ $(document).ready(function() {
 
       html += '<div style="width: 400px; float: left;>';
       html += '<span style="float: left;padding-right: 10px">' + course + '</span>';
-      html += '</div>'
+      html += '</div>';
       html += '<div style="width: 350px; float: left;>';
       html += '<span style="float: left;padding-right: 10px">' + instructor + '</span>';
       html += '</div>';
@@ -560,8 +560,8 @@ $(document).ready(function() {
     var userHtml;
 
     var options = {
-      type: 'classes/' + classId + '/connecting/enrolling/',
-    }
+      type: 'classes/' + classId + '/connecting/enrolling/'
+    };
     client.createCollection(options, function(err, collectionObj) {
       if (err) {
         alert('Could not get user feed. Please try again.');
@@ -705,7 +705,7 @@ $(document).ready(function() {
   // representing how long ago the date represents.
 
   function prettyDate(createdDateValue) {
-    var diff = (((new Date()).getTime() - createdDateValue) / 1000)
+    var diff = (((new Date()).getTime() - createdDateValue) / 1000);
     var day_diff = Math.floor(diff / 86400);
 
     if (isNaN(day_diff) || day_diff < 0 || day_diff >= 31) return 'just now';
