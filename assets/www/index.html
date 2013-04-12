@@ -1,18 +1,5 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title></title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" type="text/css"
-	href="css/jquery.mobile-1.2.0.css" />
-<title>Hello World</title>
-</head>
-<body>
-	<div class="app">
-		<div data-role="page" data-theme="b" id="page-login">
-          <div data-role="header" data-theme="b">
-            <h1>Messagee</h1><!DOCTYPE html>
-<html>
   <head>
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -28,12 +15,12 @@
 
         <div data-role="page" data-theme="b" id="page-login">
           <div data-role="header" data-theme="b">
-            <h1>Messagee</h1>
+            <h1>Almamas</h1>
           </div>
           <div data-role="content">
-            <h3>Messagee is a sample messaging app, like Twitter</h3>
+            <h3>Almamas is a sample messaging app, like Twitter</h3>
             <p>
-              <h4>Log in using your Messagee account.</h4>
+              <h4>Log in using your Almamas account.</h4>
               Don&apos;t have an account? use our test account (username: myuser / password: mypass), or create a new one!
             </p>
             <span id="login-section-error"></span>
@@ -51,13 +38,13 @@
             </div>
           </div>
           <div data-role="footer" data-position="fixed">
-            <h1>&copy; Apigee</h1>
+            <h1>&copy; Almamas</h1>
           </div>
         </div>
 
         <div data-role="page" data-theme="b" id="page-new-account">
           <div data-role="header" data-theme="b">
-            <h1>Messagee</h1>
+            <h1>Almamas</h1>
           </div>
           <div data-role="content">
             <p>Account Info</p>
@@ -75,7 +62,7 @@
               <button id="btn-create-new-account">Go!</button>
             </div>
             <div style="width: 50%; float: right">
-              <a href="#login" id="btn-close-update-account-page" data-role="button">Close</a>
+              <a href="#page-login" id="btn-close-update-account-page" data-role="button">Close</a>
             </div>
           </div>
         </div>
@@ -83,7 +70,7 @@
 
         <div data-role="page" data-theme="b" id="page-update-account">
           <div data-role="header" data-theme="b">
-            <h1>Messagee</h1>
+            <h1>Almamas</h1>
           </div>
           <div data-role="content">
             <div id="user-message-update-account"></div>
@@ -108,34 +95,40 @@
             </div>
           </div>
         </div>
-		
+
 		<!--<div data-role="page" data-theme="b" id="page-show-link">
           <div style="float:right; width: 50%" data-role="header" data-theme="b" >
             <h1>Class Link</h1>
           </div>
 		  <div style="width: 50%; float: left">
               <button id="btn-back">Back</button>
-          </div>		  
-          <div style="width: 100%; float: center" data-role="content">            
+          </div>
+          <div style="width: 100%; float: center" data-role="content">
             <iframe src="" id='class-link' width=100%;></iframe>
-           
+
           </div>
         </div>-->
-		
+
 		<div data-role="page" data-theme="b" id="page-show-link">
-          <div data-role="header" data-theme="b">
-            <h1>Messagee</h1>
+          <div data-role="header" data-theme="b" data-position="fixed">
+            <h1>Almamas</h1>
 			<a href="#page-classes-list" id="btn-back" data-role="button">Back</a>
           </div>
-		  <div data-role="content">
-		  <iframe src="" id='class-link' width=100%; height=500px;></iframe>
-		  </div>		  
+		  <div style='width:100%'>
+		    <iframe src="" id='class-link' width=100%; height=500px;></iframe>
+        <div style='padding-left:20px'>
+          <h3>Users enrolled in this class:</h3><br>
+        </div>
+        <div id="users-list"  data-role="content">
+            <!-- No users enrolled yet. -->
+        </div>
+		   </div>
 		</div>
 
 
         <div data-role="page" data-theme="b" id="page-classes-list">
-          <div data-role="header" data-theme="b">
-            <h1>Messagee</h1>
+          <div data-role="header" data-theme="b" data-position="fixed">
+            <h1>Almamas</h1>
             <a href="#login" id="btn-logout" data-role="button">Logout</a>
             <a href="#page-update-account" id="btn-show-page-update-account" data-role="button" data-icon="gear" data-rel="dialog" data-transition="fade">Settings</a>
           </div>
@@ -158,7 +151,7 @@
             </div>
           </div>
           <div data-role="footer" data-position="fixed">
-            <h1>&copy; Apigee</h1>
+            <h1>&copy; Almamas</h1>
           </div>
         </div>
 
@@ -173,7 +166,7 @@
           <label class="bold" for="subj">Subject</label>
           <select class="field" id="subj" name="subj">
             <option value="*">All</option>
-    
+
 			<option value="Ancient World Studies">Ancient World Studies</option>
 			<option value="Anthropology">Anthropology</option>
 			<option value="Arabic">Arabic</option>
@@ -254,9 +247,9 @@
           </div>
         </div>
 
-			
 
-        <div data-role="page" data-theme="b" id="page-now-following">
+
+        <!-- <div data-role="page" data-theme="b" id="page-now-following">
           <div data-role="header" data-theme="b">
             <h1>Alert</h1>
           </div>
@@ -264,163 +257,8 @@
             <div id="now-following-text" style="height: 75px;"></div>
             <a href="#" data-rel="back" data-role="button" data-icon="delete">OK</a>
           </div>
-        </div>
+        </div> -->
 
 
     </body>
-</html>
-
-          </div>
-          <div data-role="content">
-            <h3>Messagee is a sample messaging app, like Twitter</h3>
-            <p>
-              <h4>Log in using your Messagee account.</h4>
-              Don&apos;t have an account? use our test account (username: myuser / password: mypass), or create a new one!
-            </p>
-            <span id="login-section-error"></span>
-            <form name="form-login" id="form-login">
-              <label for="username">Username</label>
-              <input type="text" name="username" id="username" class="span4" />
-              <label for="password">Password</label>
-              <input type="password" name="password" id="password" class="span4" />
-            </form>
-            <div style="width: 50%; float: left">
-              <a href="#login" id="btn-login" data-role="button">Login</a>
-            </div>
-            <div style="width: 50%; float: right">
-              <a href="#page-new-account" id="btn-show-create-new-account" data-role="button" data-rel="dialog" data-transition="pop">New Account</a>
-            </div>
-          </div>
-          <div data-role="footer" data-position="fixed">
-            <h1>&copy; Apigee</h1>
-          </div>
-        </div>
-
-        <div data-role="page" data-theme="b" id="page-new-account">
-          <div data-role="header" data-theme="b">
-            <h1>Messagee</h1>
-          </div>
-          <div data-role="content">
-            <p>Account Info</p>
-            <form name="form-create-new-account" id="form-create-new-account">
-              <label for="new-name">Name</label>
-              <input type="text" name="new-name" id="new-name" class="span4" />
-              <label for="new-email">Email</label>
-              <input type="text" name="new-email" id="new-email" class="span4" />
-              <label for="new-username">Username</label>
-              <input type="text" name="new-username" id="new-username" class="span4" />
-              <label for="new-password">Password</label>
-              <input type="password" name="new-password" id="new-password" class="span4" />
-            </form>
-            <div style="width: 50%; float: left">
-              <button id="btn-create-new-account">Go!</button>
-            </div>
-            <div style="width: 50%; float: right">
-              <a href="#login" id="btn-close-update-account-page" data-role="button">Close</a>
-            </div>
-          </div>
-        </div>
-
-
-        <div data-role="page" data-theme="b" id="page-update-account">
-          <div data-role="header" data-theme="b">
-            <h1>Messagee</h1>
-          </div>
-          <div data-role="content">
-            <div id="user-message-update-account"></div>
-            <p>Account Info</p>
-            <form name="form-update-new-account" id="form-update-new-account">
-              <label for="update-name">Name</label>
-              <input type="text" name="update-name" id="update-name" class="span4" />
-              <label for="update-email">Email</label>
-              <input type="text" name="update-email" id="update-email" class="span4" />
-              <label for="update-username">Username</label>
-              <input type="text" name="update-username" id="update-username" class="span4" />
-              <label for="update-oldpassword">Current Password</label>
-              <input type="password" name="update-oldpassword" id="update-oldpassword" class="span4" />
-              <label for="update-newpassword">New Password</label>
-              <input type="password" name="update-newpassword" id="update-newpassword" class="span4" />
-            </form>
-            <div style="width: 50%; float: left">
-              <button id="btn-update-account">Update</button>
-            </div>
-            <div style="width: 50%; float: right">
-              <a href="#page-messages-list" id="btn-close" data-role="button">Close</a>
-            </div>
-          </div>
-        </div>
-
-
-        <div data-role="page" data-theme="b" id="page-messages-list">
-          <div data-role="header" data-theme="b">
-            <h1>Messagee</h1>
-            <a href="#login" id="btn-logout" data-role="button">Logout</a>
-            <a href="#page-update-account" id="btn-show-page-update-account" data-role="button" data-icon="gear" data-rel="dialog" data-transition="fade">Settings</a>
-          </div>
-          <a href="#page-new-message" id="btn-show-create-message" data-role="button" data-rel="dialog" data-transition="fade">Compose Message</a>
-          <div style="width: 50%; float: left">
-              <a href="#" data-role="button" data-icon="home" id="btn-show-my-feed">My Stream</a>
-          </div>
-          <div style="width: 50%; float: right">
-            <a href="#" data-role="button" data-icon="grid" id="btn-show-full-feed" class="ui-btn-up-c">All Posts</a>
-          </div>
-          <div id="messages-list"  data-role="content">
-              No messages yet!
-          </div>
-          <div id="feed-btn-container"  data-role="content">
-            <div style="width: 50%; float: left" id="previous-btn-container">
-              <button id="btn-previous" data-role="button" data-icon="arrow-l">Previous</button>
-            </div>
-            <div style="width: 50%; float: right" id="next-btn-container">
-              <button id="btn-next" data-role="button" data-icon="arrow-r" data-iconpos="right">Next</button>
-            </div>
-          </div>
-          <div data-role="footer" data-position="fixed">
-            <h1>&copy; Apigee</h1>
-          </div>
-        </div>
-
-
-        <div data-role="page" data-theme="b" id="page-new-message">
-          <div data-role="header" data-theme="b">
-            <h1>Create a new message</h1>
-          </div>
-          <div data-role="content">
-            <form name="login" id="login-form">
-              <label for="content">Message (150 Chars max)</label>
-              <textarea id="content" class="input-xlarge" rows="3" style="margin: 0px; width: 100%; height: 125px; "></textarea>
-            </form>
-            <div style="width: 50%; float: left">
-              <button id="post-message">Post</button>
-            </div>
-            <div style="width: 50%; float: right">
-              <a href="#page-messages-list" id="btn-close-new-message" data-role="button">Cancel</a>
-            </div>
-          </div>
-        </div>
-
-
-        <div data-role="page" data-theme="b" id="page-now-following">
-          <div data-role="header" data-theme="b">
-            <h1>Congratulations!</h1>
-          </div>
-          <div data-role="content">
-            <div id="now-following-text" style="height: 75px;"></div>
-            <a href="#" data-rel="back" data-role="button" data-icon="delete">OK</a>
-          </div>
-        </div>
-	</div>
-	<script type="text/javascript" src="cordova-2.3.0.js"></script>
-	<script type="text/javascript" src="js/jquery-1.8.2.js"></script>
-	<script type="text/javascript" src="js/jquery.mobile-1.2.0.js"></script>
-    <script type="text/javascript" src="js/jquery.mobile-1.2.0.js"></script>
-	<script type="text/javascript" src="js/usergrid.js"></script><script type="text/javascript" src="js/jquery.mobile-1.2.0.js"></script>
-	<script type="text/javascript" src="js/extensions/usergrid.validation.js"></script><script type="text/javascript" src="js/jquery.mobile-1.2.0.js"></script>
-	<script type="text/javascript" src="js/app.js"></script>
-
-
-	<script type="text/javascript" src="js/index.js"></script>
-            app.initialize();
-        </script>
-</body>
 </html>
